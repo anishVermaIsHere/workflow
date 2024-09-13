@@ -10,17 +10,16 @@ import { nodeTypes } from "../nodes";
 import { edgeTypes } from "../edges";
 import useWorkFlowStore, { AppNode } from "../store";
 import NodeContextMenu from "./NodeContextMenu";
-import Sidebar from "./Sidebar";
 import { getUID } from "../utils/uidgenerator";
-import Subheader from "./Subheader";
+
 
 const WorkFlow = () => {
   const reactFlowRef=useRef<HTMLDivElement | null>(null);
-  const { nodes, edges, menu, setMenu, type, setEdges, setNodes, onNodesChange, onEdgesChange, onConnect } = useWorkFlowStore(state=>state);
+  const { nodes, edges, menu, setMenu, type, setNodes, onNodesChange, onEdgesChange, onConnect } = useWorkFlowStore(state=>state);
   const { screenToFlowPosition } = useReactFlow();
 
 
-const onNodeContextMenu= useCallback(
+  const onNodeContextMenu= useCallback(
     (event: MouseEvent, node: AppNode) => {
       event.preventDefault();
       if(reactFlowRef.current){
@@ -79,23 +78,12 @@ const onNodeContextMenu= useCallback(
     [screenToFlowPosition, type],
   );
 
-
-//   const onConnect: OnConnect = useCallback(
-//     (connection) => { 
-//         console.log('connection', connection);
-//         setEdges((edges) => addEdge(connection, edges));
-//     },
-//     [setEdges]
-//   );
-
-
   return (    
     // <div className="reactflow-wrapper" ref={reactFlowWrapper}>
       <ReactFlow
         ref={reactFlowRef}
         onNodeContextMenu={onNodeContextMenu}
         style={{ maxWidth: "1586px", margin: "auto" }}
-        className="flex"
         nodes={nodes}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}

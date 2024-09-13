@@ -11,19 +11,16 @@ import Sidebar from "./components/Sidebar";
 export default function App() {
   const workFlowId = `work-${getUID()}`;
 
-  
-
   return (
-
-    
     <ReactFlowProvider>
       <Header />
-      <div className="flex ">
+        <div className="flex h-screen">
       <Sidebar />
-
+      <div className="flex flex-col bg-teal-50 w-full">
+        <Subheader workFlowId={workFlowId} />
+        <WorkFlow />
       </div>
-      <Subheader workFlowId={workFlowId} />
-      <WorkFlow />
+      </div>
     </ReactFlowProvider>
   );
 }

@@ -1,5 +1,5 @@
 {
-  "name": "workflow-server",
+  "name": "workflow-api",
   "version": "1.0.0",
   "description": "workflow api",
   "main": "index.js",

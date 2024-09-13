@@ -3,7 +3,7 @@ import { nodeStyle } from '../nodes';
 import useWorkFlowStore from '../store';
 
 
-const workFlowNodeStyle=`px-2 py-1 my-2 text-center border-2 border-gray-500 rounded`;
+const workFlowNodeStyle=`px-2 py-1 my-2 text-center rounded`;
 
 const startEndNodeStyle={
     backgroundColor: nodeStyle.darkBgColor,
@@ -20,8 +20,8 @@ const Sidebar = () => {
 
 
   return (
-    <aside className='px-5 bg-gray-700 rounded'>
-      <h5 className="text-white">Workflow Nodes</h5>
+    <aside className='px-5 bg-gray-400 rounded'>
+      <h5 className="py-5">Workflow Nodes</h5>
       <div className="flex flex-row md:flex-col justify-stretch flex-wrap">
         <div className={workFlowNodeStyle} style={startEndNodeStyle} onDragStart={(event) => onDragStart(event, 'input')} draggable>
             Start
