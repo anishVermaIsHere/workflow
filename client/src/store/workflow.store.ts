@@ -9,8 +9,9 @@ import {
     OnEdgesChange,
     OnConnect
 } from '@xyflow/react';
-import { initialEdges } from "./edges";
-import { initialNodes } from "./nodes";
+import { initialEdges } from "../edges";
+import { initialNodes } from "../nodes";
+import { ComponentType } from 'react';
 
 
 export type MenuType={
@@ -27,8 +28,8 @@ export type AppState = {
   nodes: AppNode[];
   edges: Edge[];
   menu: MenuType;
-  type: null;
-  setType: (nodeType: any)=>void;
+  type: ComponentType;
+  setType: (nodeType: ComponentType)=>void;
   setMenu: (menu: MenuType)=>void;
   onNodesChange: OnNodesChange<AppNode>;
   onEdgesChange: OnEdgesChange;
@@ -40,7 +41,7 @@ export type AppState = {
 const useWorkFlowStore = create<AppState>((set, get) => ({
     nodes: initialNodes,
     edges: initialEdges,
-    type: null,
+    type: {} as ComponentType,
     setType: (nodeType)=>set({ type: nodeType }),
     menu: null,
     setMenu:(prop)=>set({ menu: prop}),

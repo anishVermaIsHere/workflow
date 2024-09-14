@@ -1,11 +1,12 @@
-import { useCallback } from 'react';
+import { HTMLAttributes, useCallback } from 'react';
 import { useReactFlow, type XYPosition, Node } from '@xyflow/react';
 import "@xyflow/react/dist/style.css";
 import "../index.css";
-import { MenuType } from '../store';
+import { MenuType } from '../store/workflow.store';
+import { IoCopyOutline, IoTrashOutline } from "react-icons/io5";
 
 
-export default function NodeContextMenu(menu: MenuType) {
+export default function NodeContextMenu(menu: MenuType & HTMLAttributes<HTMLDivElement> ) {
   const { getNode, setNodes, addNodes, setEdges } = useReactFlow();
   const { id, top, bottom, right, left, label } =menu;
   
@@ -32,9 +33,19 @@ export default function NodeContextMenu(menu: MenuType) {
 
   return (
     <div style={{ top, left, right, bottom }} className="context-menu" {...menu}>
-      <p className='m-2'><strong>Node: {label}</strong></p>
-      <button onClick={duplicateNode}>Copy</button>
-      <button onClick={deleteNode}>Delete</button>
+      <p><strong>Node: {label}</strong></p>
+      <div className='p-1'>
+        <button onClick={duplicateNode} className='flex justify-between items-center'>
+          Copy
+          <IoCopyOutline className='w-5 h-5'/>
+        </button>
+        <button onClick={deleteNode} className='flex justify-between items-center'>
+          Delete
+          <IoTrashOutline className='w-5 h-5'/>
+        </button>
+      </div>
+
     </div>
   );
 }
+

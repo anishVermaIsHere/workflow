@@ -8,7 +8,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { nodeTypes } from "../nodes";
 import { edgeTypes } from "../edges";
-import useWorkFlowStore, { AppNode } from "../store";
+import useWorkFlowStore, { AppNode } from "../store/workflow.store";
 import NodeContextMenu from "./NodeContextMenu";
 import { getUID } from "../utils/uidgenerator";
 
@@ -68,8 +68,8 @@ const WorkFlow = () => {
 
        const newNode = {
         id: `node-${getUID}`,
-        data: { label: `${type} node` },
-        type,
+        data: { label: `${type}` },
+        // type,
         position,
       };
 
@@ -100,7 +100,7 @@ const WorkFlow = () => {
         <Background />
         {/* <MiniMap /> */}
         <Controls />
-        {menu && <NodeContextMenu {...menu} />}
+        {menu && <NodeContextMenu onClick={onPaneClick} {...menu} />}
         {/* <Sidebar /> */}
 
       </ReactFlow>

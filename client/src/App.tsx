@@ -14,12 +14,12 @@ export default function App() {
   return (
     <ReactFlowProvider>
       <Header />
-        <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex flex-col bg-teal-50 w-full">
-        <Subheader workFlowId={workFlowId} />
-        <WorkFlow />
-      </div>
+      <div className="">
+        <Sidebar />
+        <div className="flex flex-col bg-teal-50 h-screen w-full">
+          <Subheader workFlowId={workFlowId} />
+          <WorkFlow />
+        </div>
       </div>
     </ReactFlowProvider>
   );

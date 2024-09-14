@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import useWorkFlowStore from "../store";
+import useWorkFlowStore from "../store/workflow.store";
 import { nodeStyle } from "../nodes";
 import { getUID } from "../utils/uidgenerator";
 

@@ -23,16 +23,22 @@ body,
   box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
   position: absolute;
   z-index: 10;
+  width: 200px;
+}
+
+.context-menu p {
+  @apply p-2 bg-gray-700 text-white rounded-t-md;
 }
 
 .context-menu button {
   border: none;
-  display: block;
   padding: 0.5em;
   text-align: left;
   width: 100%;
 }
 
 .context-menu button:hover {
-  background: white;
+  /* background-color: #c7c7c7; */
+  @apply bg-[#a4edf5];
 }
+
