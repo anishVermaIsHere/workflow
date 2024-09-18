@@ -33,7 +33,7 @@ export const initialNodes: AppNode[] = [
   },
   {
     id: "c",
-    // type: 'input',
+    type: 'default',
     position: { x: 0, y: 160 },
     data: { label: "Wait" },
     style: {
@@ -43,7 +43,7 @@ export const initialNodes: AppNode[] = [
   },
   {
     id: "d",
-    // type: 'output',
+    type: 'default',
     position: { x: 0, y: 240 },
     data: { label: "Convert Format" },
     style: {
@@ -53,7 +53,7 @@ export const initialNodes: AppNode[] = [
   },
   {
     id: "e",
-    // type: "output",
+    type: "default",
     position: { x: 0, y: 320 },
     data: { label: "Send POST Request" },
     style: {

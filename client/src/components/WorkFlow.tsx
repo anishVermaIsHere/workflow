@@ -15,7 +15,7 @@ import { getUID } from "../utils/uidgenerator";
 
 const WorkFlow = () => {
   const reactFlowRef=useRef<HTMLDivElement | null>(null);
-  const { nodes, edges, menu, setMenu, type, setNodes, onNodesChange, onEdgesChange, onConnect } = useWorkFlowStore(state=>state);
+  const { nodes, edges, menu, setMenu, type, setNodes, setInstance, onNodesChange, onEdgesChange, onConnect } = useWorkFlowStore(state=>state);
   const { screenToFlowPosition } = useReactFlow();
 
 
@@ -53,8 +53,9 @@ const WorkFlow = () => {
   const onDrop = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
+      const label=event.dataTransfer.getData('label');
       // check if the dropped element is valid
-      if (!type) {
+      if (!label) {
         return;
       }
 
@@ -65,15 +66,15 @@ const WorkFlow = () => {
         x: event.clientX,
         y: event.clientY,
       });
-
        const newNode = {
-        id: `node-${getUID}`,
-        data: { label: `${type}` },
-        // type,
+        id: `node-${getUID()}`,
+        data: { label },
+        type,
         position,
       };
 
       setNodes((prevNodes) => [...prevNodes, newNode]);
+      
     },
     [screenToFlowPosition, type],
   );
@@ -94,6 +95,7 @@ const WorkFlow = () => {
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        onInit={setInstance}
         fitView
         fitViewOptions={{ padding: 1 }}
       >

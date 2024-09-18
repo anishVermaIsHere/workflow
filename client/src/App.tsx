@@ -1,26 +1,15 @@
 import { ReactFlowProvider } from "@xyflow/react";
 import Header from "./components/Header";
-import WorkFlow from "./components/WorkFlow";
 import "@xyflow/react/dist/style.css";
-
-import Subheader from "./components/Subheader";
-import { getUID } from "./utils/uidgenerator";
-import Sidebar from "./components/Sidebar";
-
+import AppRoutes from "./routes/AppRoutes";
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
-  const workFlowId = `work-${getUID()}`;
-
   return (
     <ReactFlowProvider>
       <Header />
-      <div className="">
-        <Sidebar />
-        <div className="flex flex-col bg-teal-50 h-screen w-full">
-          <Subheader workFlowId={workFlowId} />
-          <WorkFlow />
-        </div>
-      </div>
+      <AppRoutes />
+      <Toaster />
     </ReactFlowProvider>
   );
 }

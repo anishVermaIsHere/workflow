@@ -1,7 +1,7 @@
 # Workflow App in ReactJS and NodeJS with Reactflow
 
 
- **ScreenShot**
+ **Screenshot**
 
  ![Workflow app homepage](workflow-home.png)
 

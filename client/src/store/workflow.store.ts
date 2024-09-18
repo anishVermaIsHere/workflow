@@ -7,12 +7,13 @@ import {
     Node,
     OnNodesChange,
     OnEdgesChange,
-    OnConnect
+    OnConnect,
+    ReactFlowInstance
 } from '@xyflow/react';
 import { initialEdges } from "../edges";
 import { initialNodes } from "../nodes";
-import { ComponentType } from 'react';
-
+import { CustomNodeType } from '../nodes/types';
+import { getUID } from '../utils/uidgenerator';
 
 export type MenuType={
   id: string,
@@ -25,11 +26,15 @@ export type MenuType={
 
 export type AppNode = Node;
 export type AppState = {
+  workflowId: string;
   nodes: AppNode[];
   edges: Edge[];
   menu: MenuType;
-  type: ComponentType;
-  setType: (nodeType: ComponentType)=>void;
+  type: CustomNodeType;
+  instance: ReactFlowInstance | null;
+  setWorkflowId: (workflowId: string)=>void;
+  setInstance: (instance: ReactFlowInstance) => void;
+  setType: (nodeType: CustomNodeType)=>void;
   setMenu: (menu: MenuType)=>void;
   onNodesChange: OnNodesChange<AppNode>;
   onEdgesChange: OnEdgesChange;
@@ -39,15 +44,19 @@ export type AppState = {
 };
 
 const useWorkFlowStore = create<AppState>((set, get) => ({
+    workflowId: getUID(),
     nodes: initialNodes,
     edges: initialEdges,
-    type: {} as ComponentType,
-    setType: (nodeType)=>set({ type: nodeType }),
+    type: '' as CustomNodeType,
     menu: null,
-    setMenu:(prop)=>set({ menu: prop}),
+    instance: null,
+    setWorkflowId: (workflowId)=>set({ workflowId }),
+    setInstance: (instance)=>set({ instance }),
+    setType: (nodeType)=>set({ type: nodeType }),
+    setMenu:(prop)=>set({ menu: prop}), 
     onNodesChange: (changes) => {
       set({
-        nodes: applyNodeChanges(changes, get().nodes),
+        nodes: applyNodeChanges(changes, get().nodes)
       });
     },
     onEdgesChange: (changes) => {

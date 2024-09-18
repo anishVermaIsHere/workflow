@@ -4,13 +4,20 @@ import { nodeStyle } from "../nodes";
 import { getUID } from "../utils/uidgenerator";
 
 
-type SubheaderProps={
-    workFlowId: string
-}
-
-const Subheader = ({ workFlowId }: SubheaderProps) => {
-  const { nodes, setNodes } = useWorkFlowStore((state) => state);
+const Subheader = () => {
+  const { workflowId, nodes, instance, setNodes } = useWorkFlowStore((state) => state);
   const [count, setCount]=useState(1);
+
+  const onSave=useCallback(()=>{
+    if(instance){
+      const flow = instance.toObject();
+      const workflowObj={
+        ...flow,
+        workflowId
+      }
+      console.log('data', workflowObj);
+    }
+  }, [instance]);
 
   const onAdd = useCallback(() =>{
     setCount(prevCount=>prevCount+1);
@@ -40,7 +47,7 @@ const Subheader = ({ workFlowId }: SubheaderProps) => {
   return (
     <div className="px-5 w-full">
     <div className="flex justify-between flex-col md:flex-row">
-    <div className="mr-4"> Workflow id: <strong>{workFlowId} </strong> </div>
+    <div className="mr-4"> Workflow id: <strong>{workflowId} </strong> </div>
         <div className="flex items-center gap-4">
         <button
           title="save workflow button"
@@ -52,6 +59,7 @@ const Subheader = ({ workFlowId }: SubheaderProps) => {
           <button
             title="save workflow button"
             className="text-gray-100 bg-gray-700 shadow cursor-pointer py-1 px-2 mt-1 rounded"
+            onClick={onSave}
           >
             Save 
           </button>

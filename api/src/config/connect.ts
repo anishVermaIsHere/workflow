@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import appConfig from "./appconfig";
+import appConfig from "./appconfig.js";
 
 export const dbConnection= async () => {
   try {

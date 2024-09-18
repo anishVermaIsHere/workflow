@@ -34,4 +34,4 @@ const server = app.listen(appConfig.port || 5000, () => {
     const { port } = server.address() as AddressInfo;
     console.log(`***** Workflow server started at port ${port} *****`);
     dbConnection();
-  });
+});

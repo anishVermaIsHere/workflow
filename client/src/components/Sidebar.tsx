@@ -1,9 +1,10 @@
 
-import { DragEvent, ComponentType } from 'react';
+import { DragEvent } from 'react';
 import { nodeStyle } from '../nodes';
 import useWorkFlowStore from '../store/workflow.store';
 import { IoArrowBackCircle, IoArrowForwardCircle } from "react-icons/io5";
 import useCommonStore from '../store/common.store';
+import { CustomNodeType } from '../nodes/types';
 
 
 
@@ -19,11 +20,10 @@ const Sidebar = () => {
   const { setType } = useWorkFlowStore(state=>state);
   const { sidebarToggle, setSidebarToggle }=useCommonStore(state=>state);
 
-  const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: ComponentType, label: string) => {
-    setType(nodeType);
+  const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: CustomNodeType, label: string) => {
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData("label", label);
-
+    setType(nodeType);
   };
 
   const handleSidebar=()=>{
@@ -43,19 +43,19 @@ const Sidebar = () => {
         <div className={workFlowNodeStyle} style={startEndNodeStyle} onDragStart={(event) => onDragStart(event, 'input', 'Start')} draggable>
             Start
         </div>
-        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default', "Filter Data")} draggable>
+        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default', 'Filter Data')} draggable>
             Filter Data
         </div>
-        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default')} draggable>
+        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default', 'Wait')} draggable>
             Wait
         </div>
-        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default')} draggable>
+        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default', 'Convert Format')} draggable>
             Convert Format
         </div>
-        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default')} draggable>
+        <div className={workFlowNodeStyle} style={{ background: nodeStyle.bgColor }} onDragStart={(event) => onDragStart(event, 'default', 'Send POST Request')} draggable>
             Send POST Request
         </div>
-        <div className={workFlowNodeStyle} style={startEndNodeStyle} onDragStart={(event) => onDragStart(event, 'output')} draggable>
+        <div className={workFlowNodeStyle} style={startEndNodeStyle} onDragStart={(event) => onDragStart(event, 'output', 'End')} draggable>
             End
         </div>
       </div>
