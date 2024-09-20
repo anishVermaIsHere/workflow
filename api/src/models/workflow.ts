@@ -1,3 +1,4 @@
+"use strict";
 import { model, Schema, SchemaTypes } from "mongoose";
 
 const positionSchema = new Schema(
@@ -7,19 +8,38 @@ const positionSchema = new Schema(
     }
 );
 
+const measuredSchema =  new Schema(
+    {
+        width: { type: Number },
+        height: { type: Number }
+    }
+);
+
+
+const dataSchema =  new Schema(
+    {
+        label: { type: String, required: [true, "Node has must be a label or title"] },
+    }
+);
+
 const nodeSchema = new Schema(
     {
-        label: { type: String, required: [true, "Please add node label"] },
+        id: { type: String, required: [true, "Node has must be a unique id"] },
+        data: { type: dataSchema },
         position: { type: positionSchema, required: true },
         style: { type: Map, of: String },
-        type: { type: String }
+        type: { type: String },
+        dragging: { type: Boolean, default: false },
+        selected: { type: Boolean, default: true },
+        measured: { type: measuredSchema }
     }
 );
 
 const edgeSchema = new Schema(
     {
-      source: { type: SchemaTypes.ObjectId, required: true },
-      target: { type: SchemaTypes.ObjectId, required: true },
+      id: { type: String, required: true }, 
+      source: { type: String, required: true },
+      target: { type: String, required: true },
       animated: { type: Boolean, default: false },
     },
     {
@@ -41,7 +61,7 @@ const workflowSchema =  new Schema(
         title: { type: String, required: true },
         nodes: [ { type: nodeSchema } ],
         edges: [ { type: edgeSchema } ],
-        viewport: viewportSchema,
+        viewport: { type: viewportSchema, required: true },
         user: { type: SchemaTypes.ObjectId, ref: "Users" }
     },
     {

@@ -1,27 +1,48 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast from 'react-hot-toast';
+import { NavLink, useNavigate } from "react-router-dom";
+import { authAPI } from "../shared/services/api/auth";
+import useAuthStore from "../store/auth.store";
+import Spinner from "./Spinner";
+
 
 const Login = () => {
-    const [formValues, setFormValues]=useState({
-        email: "",
-        password: "",
-    });
-    const [error, setError]=useState({
-        message: "",
-    });
+  const { setUser } =  useAuthStore(state=>state);
+  const navigate = useNavigate();
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [formValues, setFormValues]=useState({
+      email: "",
+      password: "",
+  });
 
-    const handleChange=(event: ChangeEvent<HTMLInputElement>)=>{
-        setFormValues({
-            ...formValues,
-            [event.target.name]: event.target.value,
-        });
-    };
+  const handleChange=(event: ChangeEvent<HTMLInputElement>)=>{
+      setFormValues({
+          ...formValues,
+          [event.target.name]: event.target.value,
+      });
+  };
 
-    const handleSubmit=(event: FormEvent<HTMLFormElement>)=>{
-        event.preventDefault();
-        console.log('form values', formValues);
-        toast.success("Hello sdlsd");
+  const handleSubmit=async(event: FormEvent<HTMLFormElement>)=>{
+    try {
+      event.preventDefault();
+      setIsLoading(true);
+      const res = await authAPI.login(formValues);
+      if(res.status === 200){
+        setUser(res.data.user);
+        toast.success(res.data.message);
+        navigate("/user/workflow");
+      } else {
+        toast.error("Login failed");
+      }
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+      toast.error(error?.response?.data?.message);
     }
+    setFormValues({ email: "", password: ""});
+  }
+
+  if(isLoading) return <Spinner />
 
   return (
     <div className="max-w-md mx-auto py-12 px-2.5 m-16 border rounded-lg">
@@ -85,7 +106,9 @@ const Login = () => {
         Login
       </button>
     </form>
-            
+      <div className="mt-5 max-w-sm mx-auto text-center">
+      <NavLink to="/register" className="text-teal-500 underline">Register</NavLink>
+      </div>
     </div>
   );
 };

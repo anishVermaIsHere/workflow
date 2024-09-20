@@ -1,21 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 import useWorkFlowStore from "../store/workflow.store";
 import { nodeStyle } from "../nodes";
-import { getUID } from "../utils/uidgenerator";
+import { getUID } from "../utils";
+import { workflowAPI } from "../shared/services/api/workflow";
+import toast from "react-hot-toast";
 
 
 const Subheader = () => {
   const { workflowId, nodes, instance, setNodes } = useWorkFlowStore((state) => state);
   const [count, setCount]=useState(1);
 
-  const onSave=useCallback(()=>{
+  const onSave=useCallback(async()=>{
     if(instance){
       const flow = instance.toObject();
       const workflowObj={
         ...flow,
+        title: "Untitled",
         workflowId
-      }
-      console.log('data', workflowObj);
+      };
+      console.log(workflowObj)
+     const res = await workflowAPI.create(workflowObj);
+     if(res.status === 200){
+      toast.success("Saved successfully");
+     }
     }
   }, [instance]);
 

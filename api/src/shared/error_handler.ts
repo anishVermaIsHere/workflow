@@ -1,4 +1,4 @@
-
+"use strict";
 export class ApiError extends Error {
     data: null;
     success: boolean;

@@ -1,11 +1,14 @@
-// ...
-
-import express, { Application, Express, Request, Response } from "express";
+"use strict";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import appConfig from "./config/appconfig.js";
 import { AddressInfo } from "net";
 import { dbConnection } from "./config/connect.js";
+import { userRouter } from "./routes/user.js";
+import { workflowRouter } from "./routes/workflow.js";
+import UserModel from "./models/user.js";
+import encrypt from "./config/encrypt.js";
 
 
 
@@ -23,12 +26,18 @@ app.use(
 );
 
 app.get("/", (_: Request, res: Response) =>
-    res.json({
-      message: "Hey, this is a Workflow API ",
-      author: "Anish Verma",
-      time: `${new Date().toDateString()} ${new Date().toLocaleTimeString()}`
-    })
+  res.json({
+    message: "Hey, this is a Workflow API ",
+    author: "Anish Verma",
+    time: `${new Date().toDateString()} ${new Date().toLocaleTimeString()}`
+  })
 );
+
+// routes initialization
+app.use("/api/v1/auth", userRouter);
+app.use("/api/v1/workflow", workflowRouter);
+
+
 
 const server = app.listen(appConfig.port || 5000, () => {
     const { port } = server.address() as AddressInfo;

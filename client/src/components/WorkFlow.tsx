@@ -10,7 +10,7 @@ import { nodeTypes } from "../nodes";
 import { edgeTypes } from "../edges";
 import useWorkFlowStore, { AppNode } from "../store/workflow.store";
 import NodeContextMenu from "./NodeContextMenu";
-import { getUID } from "../utils/uidgenerator";
+import { getUID } from "../utils";
 
 
 const WorkFlow = () => {

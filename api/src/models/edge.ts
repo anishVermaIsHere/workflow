@@ -1,9 +1,11 @@
+"use strict";
 import { Schema, SchemaTypes, model } from "mongoose";
 
 const edgeSchema = new Schema(
   {
-    source: { type: SchemaTypes.ObjectId, required: true },
-    target: { type: SchemaTypes.ObjectId, required: true },
+    id: { type: String, required: true },
+    source: { type: String, required: true },
+    target: { type: String, required: true },
     animated: { type: Boolean, default: false },
   },
   {

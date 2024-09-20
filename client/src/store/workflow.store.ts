@@ -13,7 +13,7 @@ import {
 import { initialEdges } from "../edges";
 import { initialNodes } from "../nodes";
 import { CustomNodeType } from '../nodes/types';
-import { getUID } from '../utils/uidgenerator';
+import { getUID } from '../utils';
 
 export type MenuType={
   id: string,

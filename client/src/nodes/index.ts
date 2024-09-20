@@ -1,3 +1,4 @@
+"use strict";
 import type { NodeTypes } from "@xyflow/react";
 import { PositionLoggerNode } from "./PositionLoggerNode";
 import { AppNode } from "./types";

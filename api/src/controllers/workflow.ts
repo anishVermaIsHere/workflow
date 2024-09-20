@@ -1,6 +1,8 @@
+"use strict";
 import { Request, Response } from "express";
 import WorkFlowModel from "../models/workflow.js";
 import { HTTP_CODES } from "../shared/constants/index.js";
+import { WFCreateType } from "../validation/index.js";
 
 
 const { SUCCESS, CREATE } =  HTTP_CODES;
@@ -33,9 +35,9 @@ const workflowController={
             throw new Error(error.message);
           }  
     },
-    async create(req: Request, res: Response){
+    async create(req: Request<{}, WFCreateType["body"]>, res: Response){
         try {
-            const data = req.body.data;
+            const data = req.body;
             const workflow = await WorkFlowModel.create(data);
             return res.status(CREATE).json(workflow);
         } catch (error: any) {

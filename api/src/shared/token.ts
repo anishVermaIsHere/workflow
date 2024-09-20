@@ -1,3 +1,4 @@
+"use strict";
 import { Request } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken"; // dont import * as jwt here
 import { IToken } from "./types/index.js";
@@ -11,12 +12,24 @@ export interface IDecode extends JwtPayload {
 
 export type TRequestAuth = Request & { decode: IDecode };
 
+export interface IDecode extends JwtPayload {
+  email: string;
+  id: string;
+  iat: number;
+  exp: number;
+}
+
 export enum TOKEN {
   ACCESS_TOKEN='ACCESS_TOKEN',
   REFRESH_TOKEN='REFRESH_TOKEN'
 }
 
-const tokenObject = {
+export const decodedUser=(req: Request)=>{
+  return (<TRequestAuth>req)["decode"];
+}
+
+
+const tokenInfo = {
   tokenEncode(payload) {
     const { id }=payload;
     const accessToken= jwt.sign(payload, process.env.ACCESS_TOKEN_SEC_KEY!, { algorithm: "HS256", expiresIn: process.env.ACCESS_TOKEN_EXPIRY! });
@@ -47,4 +60,4 @@ const tokenObject = {
   },
 } as IToken;
 
-export default tokenObject;
+export default tokenInfo;
