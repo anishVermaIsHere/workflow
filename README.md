@@ -3,7 +3,7 @@
 
  **Screenshot**
 
- ![Workflow homepage](workflow-home.png)
+ ![Workflow homepage](workflow-homepage.png)
 
  ![Workflow page](workflow-page.png)
 
