@@ -1,39 +1,42 @@
 "use strict";
 import { Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
 import WorkFlowModel from "../models/workflow.js";
 import { HTTP_CODES } from "../shared/constants/index.js";
 import { WFCreateType } from "../validation/index.js";
+import { decodedUser } from "../shared/token.js";
+import { ApiError } from "../shared/error_handler.js";
 
 
-const { SUCCESS, CREATE } =  HTTP_CODES;
+const { SUCCESS, SERVER_ERROR, CREATE, BAD_REQUEST, RESOURCE_NOT_FOUND } =  HTTP_CODES;
 
 const workflowController={
     async getByUser(req: Request, res: Response){
         try {
-            const id =  req.params.id;
-            const userId =  'user_354jtlslsfs';
-            const workflow = await WorkFlowModel.find({ user: id });
-
-            // if(workflow && workflow._id){
-                return res.status(SUCCESS).json(workflow);
-            // }
+            const user = decodedUser(req);
+            const workflows = await WorkFlowModel.find({ user: user.id }, "-__v").sort('-createdAt');
+            return res.status(SUCCESS).json(workflows);
         } catch (error: any) {
             console.log('API error while getting workflow', error);
-            throw new Error(error.message);
+            throw new ApiError(SERVER_ERROR, error.message);
         }  
     },
     async getById(req: Request, res: Response){
         try {
-            const id =  req.params.id;
-            const workflow = await WorkFlowModel.find({ workflowId: id });
-    
-            // if(workflow && workflow._id){
-                return res.status(SUCCESS).json(workflow);
-            // }
-          } catch (error: any) {
+            const workflowId =  req.params.id;
+            if (!isValidObjectId(workflowId)) {
+                return res.status(BAD_REQUEST).json({ message: "Invalid workflow ID." });
+            }
+            const workflow = await WorkFlowModel.find({ _id: workflowId }, ["-__v", "-viewport._id"]);
+            if(!workflow){
+                return res.status(RESOURCE_NOT_FOUND).json({ message: "Workflow not found" }); 
+            }
+            
+            return res.status(SUCCESS).json(workflow[0]);
+        } catch (error: any) {
             console.log('API error while getting workflow', error);
-            throw new Error(error.message);
-          }  
+            throw new ApiError(SERVER_ERROR, error.message);
+        }  
     },
     async create(req: Request<{}, WFCreateType["body"]>, res: Response){
         try {
@@ -42,11 +45,19 @@ const workflowController={
             return res.status(CREATE).json(workflow);
         } catch (error: any) {
             console.log('API error while creating workflow', error);
-            throw new Error(error.message);
+            throw new ApiError(SERVER_ERROR, error.message);
+        }
+    },
+    async udpate(req: Request, res: Response){
+        try {
+            
+        } catch (error: any) {
+            console.log('API error while updating workflow', error);
+            throw new ApiError(SERVER_ERROR, error.message);
         }
     },
     async delete(){
-
+        //..
     }
 }
 

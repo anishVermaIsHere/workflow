@@ -5,6 +5,7 @@ import {
   Controls,
   useReactFlow,
 } from "@xyflow/react";
+import { useParams } from "react-router-dom";
 import "@xyflow/react/dist/style.css";
 import { nodeTypes } from "../nodes";
 import { edgeTypes } from "../edges";
@@ -14,6 +15,7 @@ import { getUID } from "../utils";
 
 
 const WorkFlow = () => {
+  const params = useParams();
   const reactFlowRef=useRef<HTMLDivElement | null>(null);
   const { nodes, edges, menu, setMenu, type, setNodes, setInstance, onNodesChange, onEdgesChange, onConnect } = useWorkFlowStore(state=>state);
   const { screenToFlowPosition } = useReactFlow();
@@ -103,7 +105,6 @@ const WorkFlow = () => {
         {/* <MiniMap /> */}
         <Controls />
         {menu && <NodeContextMenu onClick={onPaneClick} {...menu} />}
-        {/* <Sidebar /> */}
 
       </ReactFlow>
     // </div>

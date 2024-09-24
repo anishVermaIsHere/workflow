@@ -2,7 +2,6 @@
 import { ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from "axios";
-import { parsePersistedData } from "../../utils";
 import useAuthStore from "../../store/auth.store";
 
 const axiosInstance = axios.create({
@@ -44,7 +43,7 @@ const AxiosInterceptor = ({ children }: { children: ReactNode }) => {
     
        const requestInterceptor = axiosInstance.interceptors.request.use(
             (request: InternalAxiosRequestConfig) => {
-                request.headers["User-Agent"] = window.navigator.userAgent;
+                // request.headers["User-Agent"] = window.navigator.userAgent;
                 const auth=getAuth();
                 if (auth?.accessToken) {
                   request.headers["Authorization"] = `Bearer ${auth?.accessToken}`; 

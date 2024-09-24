@@ -5,7 +5,7 @@ const Protected = () => {
   const location=useLocation();
   const  { user } =useAuthStore(state=>state);
   const publicRoutes=['/', '/register'];
-  const protectedRoutes=['/user/:path*'];
+  const protectedRoutes=['/user/:path/*'];
   const isProtectedRoute = protectedRoutes.some(route => matchPath(route, location.pathname));
   const isPublicRoute = publicRoutes.some(route => matchPath(route, location.pathname));
   

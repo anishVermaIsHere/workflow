@@ -2,13 +2,8 @@
 import type { NodeTypes } from "@xyflow/react";
 import { PositionLoggerNode } from "./PositionLoggerNode";
 import { AppNode } from "./types";
+import { layoutStyle } from "../utils/styles";
 
-
-export const nodeStyle={
-  bgColor: "#a4edf5",
-  padding: "0.33rem",
-  darkBgColor: "#424242"
-};
 
 export const initialNodes: AppNode[] = [
   {
@@ -17,9 +12,9 @@ export const initialNodes: AppNode[] = [
     position: { x: 0, y: 0 },
     data: { label: "Start" },
     style: {
-      backgroundColor: nodeStyle.darkBgColor,
+      backgroundColor: layoutStyle.darkBgColor,
       color: "#fff",
-      padding: nodeStyle.padding
+      padding: layoutStyle.padding
     }
   },
   {
@@ -28,8 +23,8 @@ export const initialNodes: AppNode[] = [
     position: { x: 0, y: 80 },
     data: { label: "Filter Data" },
     style: {
-      backgroundColor: nodeStyle.bgColor,
-      padding: nodeStyle.padding
+      backgroundColor: layoutStyle.bgColor,
+      padding: layoutStyle.padding
     }
   },
   {
@@ -38,8 +33,8 @@ export const initialNodes: AppNode[] = [
     position: { x: 0, y: 160 },
     data: { label: "Wait" },
     style: {
-      backgroundColor: nodeStyle.bgColor,
-      padding: nodeStyle.padding
+      backgroundColor: layoutStyle.bgColor,
+      padding: layoutStyle.padding
     }
   },
   {
@@ -48,8 +43,8 @@ export const initialNodes: AppNode[] = [
     position: { x: 0, y: 240 },
     data: { label: "Convert Format" },
     style: {
-      backgroundColor: nodeStyle.bgColor,
-      padding: nodeStyle.padding
+      backgroundColor: layoutStyle.bgColor,
+      padding: layoutStyle.padding
     }
   },
   {
@@ -58,8 +53,8 @@ export const initialNodes: AppNode[] = [
     position: { x: 0, y: 320 },
     data: { label: "Send POST Request" },
     style: {
-      backgroundColor: nodeStyle.bgColor,
-      padding: nodeStyle.padding
+      backgroundColor: layoutStyle.bgColor,
+      padding: layoutStyle.padding
     }
   },
   {
@@ -68,9 +63,9 @@ export const initialNodes: AppNode[] = [
     position: { x: 0, y: 400 },
     data: { label: "End" },
     style: {
-      backgroundColor: nodeStyle.darkBgColor,
+      backgroundColor: layoutStyle.darkBgColor,
       color: "#fff",
-      padding: nodeStyle.padding
+      padding: layoutStyle.padding
     }
   },
 ];

@@ -7,5 +7,6 @@ const userRouter = Router();
 
 userRouter.post("/", userController.login);
 userRouter.post("/logout", userController.logout);
+userRouter.post('/refresh', userController.refreshToken);
 
 export { userRouter };

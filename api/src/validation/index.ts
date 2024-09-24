@@ -31,7 +31,6 @@ const viewportSchema = object({
 
 const workflowSchema = {
     body: object({
-        workflowId: string({ required_error: "workflowId is required" }),
         title: string({ required_error: "Title is required" }),
         nodes: nodeSchema,
         edges: edgeSchema,

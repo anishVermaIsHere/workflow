@@ -57,7 +57,6 @@ const viewportSchema = new Schema(
 
 const workflowSchema =  new Schema(
     {
-        workflowId: { type: String, required: true },
         title: { type: String, required: true },
         nodes: [ { type: nodeSchema } ],
         edges: [ { type: edgeSchema } ],

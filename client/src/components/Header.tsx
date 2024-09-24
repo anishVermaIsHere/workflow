@@ -27,7 +27,6 @@ const Dropdown=()=>{
     <button
     onClick={()=>setToggle(!toggle)}
     className="rounded-lg text-sm text-center inline-flex items-center text-white" type="button">
-      <span className="me-2">{username}</span>
     <div>
       <img 
       className="h-8 w-8 rounded-full cursor-pointer"
@@ -60,7 +59,7 @@ const Header = () => {
   return (
     <header className="bg-gray-700 p-2">
       <nav className="relative flex justify-between items-center">
-        <h2 className="text-lg text-white">Workflow builder app</h2>
+        <h2 className="text-lg text-white">Workflow builder</h2>
         { user.accessToken && <Dropdown /> }
       </nav>
     </header>

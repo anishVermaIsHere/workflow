@@ -8,6 +8,8 @@ import { workflowCreateSchema } from "../validation/index.js";
 
 const workflowRouter = Router();
 
+workflowRouter.get("/", tokenVerify, workflowController.getByUser);
+workflowRouter.get("/:id", tokenVerify, workflowController.getById);
 workflowRouter.post("/", tokenVerify, validator(workflowCreateSchema), workflowController.create);
 
 export { workflowRouter };

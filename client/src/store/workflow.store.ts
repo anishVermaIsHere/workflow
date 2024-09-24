@@ -8,12 +8,15 @@ import {
     OnNodesChange,
     OnEdgesChange,
     OnConnect,
-    ReactFlowInstance
+    ReactFlowInstance,
+    Viewport
 } from '@xyflow/react';
 import { initialEdges } from "../edges";
 import { initialNodes } from "../nodes";
 import { CustomNodeType } from '../nodes/types';
 import { getUID } from '../utils';
+import { WorkflowType } from '../shared/types';
+
 
 export type MenuType={
   id: string,
@@ -26,13 +29,23 @@ export type MenuType={
 
 export type AppNode = Node;
 export type AppState = {
+  workflowList: WorkflowType[],
+  workflowTitle: string;
   workflowId: string;
   nodes: AppNode[];
   edges: Edge[];
+  viewport: Viewport;
+  createdAt: string;
+  updatedAt: string;
   menu: MenuType;
   type: CustomNodeType;
   instance: ReactFlowInstance | null;
+  setWorkflowList: (workflows: WorkflowType[])=>void;
+  setWorkflowTitle: (workflowTitle: string)=>void;
   setWorkflowId: (workflowId: string)=>void;
+  setViewport: (viewport: Viewport)=>void;
+  setCreatedAt:(date: string)=>void;
+  setUpdatedAt:(date: string)=>void;
   setInstance: (instance: ReactFlowInstance) => void;
   setType: (nodeType: CustomNodeType)=>void;
   setMenu: (menu: MenuType)=>void;
@@ -43,14 +56,30 @@ export type AppState = {
   setEdges: (edges: Edge[]) => void;
 };
 
+
+
 const useWorkFlowStore = create<AppState>((set, get) => ({
+    workflowList: [],
     workflowId: getUID(),
+    workflowTitle: `Untitled_${getUID()}`,
     nodes: initialNodes,
     edges: initialEdges,
+    viewport: {
+      x:507.4011627906977,
+      y: 183.75,
+      zoom: 0.8546511627906976
+    } as Viewport,
+    updatedAt: '',
+    createdAt: '',
     type: '' as CustomNodeType,
     menu: null,
     instance: null,
+    setWorkflowList: (workflows: WorkflowType[])=>set({ workflowList: workflows }),
+    setWorkflowTitle: (workflowTitle: string)=>set({ workflowTitle }),
     setWorkflowId: (workflowId)=>set({ workflowId }),
+    setViewport: (viewport: Viewport)=>set({ viewport }),
+    setCreatedAt: (date: string)=>set({ createdAt: date }),
+    setUpdatedAt: (date: string)=>set({ updatedAt: date }),
     setInstance: (instance)=>set({ instance }),
     setType: (nodeType)=>set({ type: nodeType }),
     setMenu:(prop)=>set({ menu: prop}), 
@@ -77,6 +106,7 @@ const useWorkFlowStore = create<AppState>((set, get) => ({
     setEdges: (edges) => {
       set({ edges });
     },
+    
   }));
   
   export default useWorkFlowStore;

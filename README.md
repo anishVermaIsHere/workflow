@@ -1,8 +1,11 @@
-# Workflow App in ReactJS and NodeJS with Reactflow
+# Workflow App in MERN with Reactflow
 
 
  **Screenshot**
 
- ![Workflow app homepage](workflow-home.png)
+ ![Workflow homepage](workflow-home.png)
+
+ ![Workflow page](workflow-page.png)
+
 
  
