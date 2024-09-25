@@ -48,16 +48,39 @@ const workflowController={
             throw new ApiError(SERVER_ERROR, error.message);
         }
     },
-    async udpate(req: Request, res: Response){
+    async update(req: Request, res: Response){
         try {
-            
+            const workflowId =  req.params.id;
+            const workflowData = req.body
+            if (!isValidObjectId(workflowId)) {
+                return res.status(BAD_REQUEST).json({ message: "Invalid workflow ID." });
+            }
+            const workflow = await WorkFlowModel.findOneAndUpdate({ _id: workflowId }, workflowData);
+            if(!workflow){
+                return res.status(RESOURCE_NOT_FOUND).json({ message: "Workflow not found" }); 
+            }            
+            return res.status(SUCCESS).json(workflow);
         } catch (error: any) {
             console.log('API error while updating workflow', error);
             throw new ApiError(SERVER_ERROR, error.message);
         }
     },
-    async delete(){
-        //..
+    async delete(req: Request, res: Response){
+        try {
+            const workflowId =  req.params.id;
+            if (!isValidObjectId(workflowId)) {
+                return res.status(BAD_REQUEST).json({ message: "Invalid workflow ID." });
+            }
+            const workflow = await WorkFlowModel.deleteOne({ _id: workflowId }, );
+            if(!workflow){
+                return res.status(RESOURCE_NOT_FOUND).json({ message: "Workflow not found" }); 
+            }
+            
+            return res.status(SUCCESS).json({ message: "Deleted successfully "});
+        } catch (error: any) {
+            console.log('API error while deleting workflow', error);
+            throw new ApiError(SERVER_ERROR, error.message);
+        }
     }
 }
 

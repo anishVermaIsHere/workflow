@@ -7,31 +7,51 @@ import useWorkFlowStore from "../store/workflow.store";
 import { layoutStyle } from "../utils/styles";
 import { getUID } from "../utils";
 import { workflowAPI } from "../shared/services/api/workflow";
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+
 
 
 
 const Subheader = () => {
-  const { workflowTitle, updatedAt, instance, nodes, setNodes, setWorkflowTitle } = useWorkFlowStore((state) => state);
+  const { workflowTitle, workflowId, updatedAt, createdAt, instance, nodes, setNodes, setWorkflowTitle } = useWorkFlowStore((state) => state);
   const [count, setCount] = useState(1); 
   const params = useParams();
+  const queryClient=useQueryClient();
+
+  const updateMutation = useMutation({
+    mutationFn: async()=>{
+      await onSave();
+    },
+    onSuccess: () => {
+    },
+    onSettled:async(_,error)=>{
+      if(error){
+        //
+      }
+      else { 
+        queryClient.invalidateQueries({ queryKey: ['workflows'] }); 
+        queryClient.invalidateQueries({ queryKey: ['workflow', params.id] }); 
+      }
+    }
+  });
+
 
 
   const onSave = useCallback(async () => {
-    // if(params.id!){
-
-    // }
     if (instance) {
       const flow = instance.toObject();
       const workflowObj = {
         ...flow,
-        title: workflowTitle
+        updatedAt,
+        createdAt,
+        title: workflowTitle,
+        _id: workflowId
       };
-      const res = await workflowAPI.create(workflowObj);
+      const res = await workflowAPI.update(workflowObj, params.id!);
       if (res.status === 201) {
         toast.success("Saved successfully");
       }
     }
-    // handleModal();
   }, [instance, workflowTitle]);
 
   const handleTitle = useCallback((e: FormEvent<HTMLSpanElement>) => {
@@ -72,7 +92,7 @@ const Subheader = () => {
           </div>
           <p className="flex items-center text-sm">
             <FaRegCheckCircle className='me-1 w-4 h-4 text-green-500'/>
-            last updated on: {updatedAt} 
+            last updated: {updatedAt} 
           </p>
         </div>
         <div className="">
@@ -86,7 +106,7 @@ const Subheader = () => {
               Node
             </button>
             <button
-              onClick={onSave}
+              onClick={()=>updateMutation.mutate()}
               title="save workflow button"
               className="flex items-center text-gray-100 bg-gray-700 shadow cursor-pointer py-1 px-2 mt-1 rounded"
             >

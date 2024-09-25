@@ -10,6 +10,8 @@ const workflowRouter = Router();
 
 workflowRouter.get("/", tokenVerify, workflowController.getByUser);
 workflowRouter.get("/:id", tokenVerify, workflowController.getById);
+workflowRouter.put("/:id", tokenVerify, workflowController.update);
+workflowRouter.delete("/:id", tokenVerify, workflowController.delete);
 workflowRouter.post("/", tokenVerify, validator(workflowCreateSchema), workflowController.create);
 
 export { workflowRouter };

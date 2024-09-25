@@ -11,8 +11,6 @@ import {
     ReactFlowInstance,
     Viewport
 } from '@xyflow/react';
-import { initialEdges } from "../edges";
-import { initialNodes } from "../nodes";
 import { CustomNodeType } from '../nodes/types';
 import { getUID } from '../utils';
 import { WorkflowType } from '../shared/types';
@@ -37,13 +35,15 @@ export type AppState = {
   viewport: Viewport;
   createdAt: string;
   updatedAt: string;
+  workflow: WorkflowType;
   menu: MenuType;
   type: CustomNodeType;
   instance: ReactFlowInstance | null;
+  setWorkflow: (workflow: WorkflowType)=>void;
   setWorkflowList: (workflows: WorkflowType[])=>void;
   setWorkflowTitle: (workflowTitle: string)=>void;
   setWorkflowId: (workflowId: string)=>void;
-  setViewport: (viewport: Viewport)=>void;
+  setViewport: (viewport: Viewport )=>void;
   setCreatedAt:(date: string)=>void;
   setUpdatedAt:(date: string)=>void;
   setInstance: (instance: ReactFlowInstance) => void;
@@ -54,16 +54,17 @@ export type AppState = {
   onConnect: OnConnect;
   setNodes: (nodes: AppNode[] | ((prevNodes: AppNode[]) => AppNode[])) => void; 
   setEdges: (edges: Edge[]) => void;
+  createNew: ()=>void;
 };
 
 
 
 const useWorkFlowStore = create<AppState>((set, get) => ({
     workflowList: [],
-    workflowId: getUID(),
+    workflowId: '',
     workflowTitle: `Untitled_${getUID()}`,
-    nodes: initialNodes,
-    edges: initialEdges,
+    nodes: [],
+    edges: [],
     viewport: {
       x:507.4011627906977,
       y: 183.75,
@@ -71,13 +72,15 @@ const useWorkFlowStore = create<AppState>((set, get) => ({
     } as Viewport,
     updatedAt: '',
     createdAt: '',
+    workflow: {} as WorkflowType,
     type: '' as CustomNodeType,
     menu: null,
     instance: null,
+    setWorkflow: (workflow: WorkflowType)=>set({ workflow }),
     setWorkflowList: (workflows: WorkflowType[])=>set({ workflowList: workflows }),
     setWorkflowTitle: (workflowTitle: string)=>set({ workflowTitle }),
     setWorkflowId: (workflowId)=>set({ workflowId }),
-    setViewport: (viewport: Viewport)=>set({ viewport }),
+    setViewport: (viewport: Viewport )=>set({ viewport }),
     setCreatedAt: (date: string)=>set({ createdAt: date }),
     setUpdatedAt: (date: string)=>set({ updatedAt: date }),
     setInstance: (instance)=>set({ instance }),
@@ -106,6 +109,7 @@ const useWorkFlowStore = create<AppState>((set, get) => ({
     setEdges: (edges) => {
       set({ edges });
     },
+    createNew: ()=>{}
     
   }));
   

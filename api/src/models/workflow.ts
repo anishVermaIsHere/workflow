@@ -49,9 +49,9 @@ const edgeSchema = new Schema(
 
 const viewportSchema = new Schema(
     {
-        x: { type: Number, required: true },
-        y: { type: Number, required: true },
-        zoom: { type: Number, required: true }
+        x: { type: Number },
+        y: { type: Number },
+        zoom: { type: Number }
     }
 );
 
@@ -60,7 +60,7 @@ const workflowSchema =  new Schema(
         title: { type: String, required: true },
         nodes: [ { type: nodeSchema } ],
         edges: [ { type: edgeSchema } ],
-        viewport: { type: viewportSchema, required: true },
+        viewport: { type: viewportSchema },
         user: { type: SchemaTypes.ObjectId, ref: "Users" }
     },
     {

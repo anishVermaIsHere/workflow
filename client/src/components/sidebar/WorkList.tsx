@@ -18,15 +18,17 @@ const WorkList = () => {
     });
 
 
-    const openFile=(workflowId: string)=>{
-        navigate(`/user/workflow/${workflowId}`);  
+    const openWorkflow=(workflowId: string)=>{
+        if (location.pathname !== `/user/workflow/${workflowId}`) {
+            navigate(`/user/workflow/${workflowId}`);  
+          }
     };
 
     useEffect(()=>{
         if(data?.data){
             setWorkflowList(data.data);
         }
-    }, [isSuccess]);
+    }, [isSuccess, data]);
 
 
     if(isPending){
@@ -39,7 +41,7 @@ const WorkList = () => {
             <div className='overflow-auto h-[200px]'>
                 {workflowList.length ? workflowList?.map((wf: WorkflowType)=>{ 
                     return <div 
-                            onClick={()=>openFile(wf._id)} 
+                            onClick={()=>openWorkflow(wf._id)} 
                             className={`flex items-center my-[0.22rem] p-1 text-sm text-gray-600 hover:font-semibold transition-all duration-100 cursor-pointer rounded`} 
                             key={wf._id}
                             >

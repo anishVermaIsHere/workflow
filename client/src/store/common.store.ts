@@ -9,7 +9,7 @@ type AppState={
 };
 
 const useCommonStore=create<AppState>((set)=>({
-    sidebarToggle: false,
+    sidebarToggle: true,
     isModalOpen: false,
     setIsModalOpen: (toggle: boolean)=>set({ isModalOpen: toggle }),
     setSidebarToggle: (toggle: boolean)=>set(({ sidebarToggle: toggle }))

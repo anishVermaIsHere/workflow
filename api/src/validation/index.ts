@@ -14,20 +14,20 @@ const nodeSchema = object({
     }).optional(),
     dragging: boolean().optional(),
     selected: boolean().optional(),
-}).array();
+}).array().optional();
 
 const edgeSchema = object({
     id:  string({ required_error: "Edge id is required" }),
     source: string({ required_error: "Edge source is required "}),
     target: string({ required_error: "Edge source is required" }),
     animated: boolean({ required_error: "isActive is required", invalid_type_error: "isActive must be a boolean" })
-}).array();
+}).array().optional();
 
 const viewportSchema = object({
     x: number({ required_error: "X axis value is required" }),
     y: number({ required_error: "Y axis value is required" }),
     zoom: number({ required_error: "zoom value is required" })
-});
+}).optional();
 
 const workflowSchema = {
     body: object({
