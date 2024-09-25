@@ -4,9 +4,11 @@
 
  **Screenshot**
 
- ![Workflow homepage](workflow-homepage.png)
+ ![Workflow home page](workflow-homepage.png)
 
- ![Workflow page](workflow-page.png)
+ ![Workflow page](workflow-workflowpage.png)
+ 
+ ![Workflow run workflow page](workflow-uploadpage.png)
 
 
 
