@@ -22,8 +22,12 @@
 
 **Features**
 
-- Workflow including (nodes, edges)
-- User Authtentication & Authorization 
+- Workflow including (nodes, edges),
+- User Authtentication & Authorization ,
+- Added Nodes by Drag & Drop,
+- Copy and Delete Nodes, 
+- Save and Loaded workflow
+- Execute the workflow after uploading `.csv` file data
 
 *To start application: You have to install first NodeJS from here [NodeJS download](https://nodejs.org/en/download/prebuilt-installer) in your system and after installation follow these steps as below*
 
