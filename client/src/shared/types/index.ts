@@ -13,9 +13,15 @@ interface WorkflowType extends CreateWorkflowType {
     updatedAt: string;
 }
 
+interface WorkflowUploadDataType {
+    rows: string[];
+    columns: string[];
+    workflowId: string;
+}
 
 
 export type { 
     WorkflowType,
-    CreateWorkflowType
+    CreateWorkflowType,
+    WorkflowUploadDataType
 }

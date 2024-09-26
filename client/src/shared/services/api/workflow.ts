@@ -1,9 +1,10 @@
 "use strict";
 import axiosInstance from "../AxiosInterceptor";
-import { CreateWorkflowType, WorkflowType } from "../../types";
+import { CreateWorkflowType, WorkflowType, WorkflowUploadDataType } from "../../types";
 
 const URL=`${import.meta.env.VITE_BASE_URL}/api/v1/workflow`;
 const auth = JSON.parse(localStorage.getItem('auth') || '{}').state.user  || null;
+
 
 export const workflowAPI={
     async create(data: CreateWorkflowType){
@@ -16,7 +17,7 @@ export const workflowAPI={
             data
         });
     },
-    async update(data: WorkflowType, workflowId: string){
+    async update(data: Omit<WorkflowType, "_id">, workflowId: string){
         return await axiosInstance({
             method: 'PUT',
             url: `${URL}/${workflowId}`,
@@ -52,6 +53,16 @@ export const workflowAPI={
                 'Authorization': `Bearer ${auth.accessToken}`
             }
         })
+    },
+    async execution(data: WorkflowUploadDataType){
+        return await axiosInstance({
+            method: 'POST',
+            url: `${URL}/execute`,
+            headers: {
+                'Authorization': `Bearer ${auth.accessToken}`
+            },
+            data
+        });
     }
 };
 

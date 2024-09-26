@@ -13,7 +13,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 
 const Subheader = () => {
-  const { workflowTitle, workflowId, updatedAt, createdAt, instance, nodes, setNodes, setWorkflowTitle } = useWorkFlowStore((state) => state);
+  const { workflowTitle, updatedAt, createdAt, instance, nodes, setNodes, setWorkflowTitle } = useWorkFlowStore((state) => state);
   const [count, setCount] = useState(1); 
   const params = useParams();
   const queryClient=useQueryClient();
@@ -45,10 +45,9 @@ const Subheader = () => {
         updatedAt,
         createdAt,
         title: workflowTitle,
-        _id: workflowId
       };
       const res = await workflowAPI.update(workflowObj, params.id!);
-      if (res.status === 201) {
+      if (res.status === 200) {
         toast.success("Saved successfully");
       }
     }

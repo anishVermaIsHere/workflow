@@ -1,8 +1,10 @@
-import React, { ChangeEvent, FormEvent, useRef } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 import Layout from '../components/Layout'
 import { IoCloudUploadSharp } from 'react-icons/io5'
 import useWorkFlowStore from '../store/workflow.store'
 import { WorkflowType } from '../shared/types'
+import { workflowAPI } from '../shared/services/api/workflow'
+import toast from 'react-hot-toast'
 
 
 
@@ -11,6 +13,25 @@ const WorkflowUploadPage = () => {
 
     const { workflowList } = useWorkFlowStore(state=>state);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [formValues, setFormValues]= useState<{
+        columns: string[],
+        rows: string[],
+        workflowId: string
+    }>({
+        columns: [],
+        rows: [],
+        workflowId: ''
+    });
+
+    const [fileName, setFileName] = useState('');
+    const [disabled, setDisabled] = useState(true);
+
+    const validateFields=()=>{
+        if(formValues.columns && formValues.rows && formValues.workflowId){
+            return true;
+        } 
+        return false;
+    }
 
     const handleFileInput=()=>{
         if(fileInputRef.current){
@@ -22,10 +43,17 @@ const WorkflowUploadPage = () => {
         const file = e.target.files ? e.target.files[0] : null;
         if(file){
             const reader = new FileReader();
+            setFileName(file.name);
             reader.onload = (event: ProgressEvent<FileReader>) => {
                 if(event.target){
                     const text= event.target.result as string;
-                    csvToArray(text);
+                    const { columns, rows } = csvToRowsAndCols(text);
+
+                    setFormValues({
+                        ...formValues,
+                        columns,
+                        rows
+                    });
                 }
             }
 
@@ -34,25 +62,38 @@ const WorkflowUploadPage = () => {
         
     };
 
-    const handleSubmit=(e: FormEvent)=>{
-        e.preventDefault();
-    };
-
-    const csvToArray=(csvText: string)=>{
-        const csvHeader = csvText.slice(0, csvText.indexOf("\r\n")).split(",");
-        const csvRows = csvText.slice(csvText.indexOf("\r\n") + 1).split("\r");
-        console.log(csvRows);
-        console.log(csvHeader);
-        const data = csvRows.map((row: string)=>{
-            const value = row.split(',');
-            return csvHeader.reduce((object, header, index)=>{
-                object[header]= value[index];
-                return object;
-            }, {})
+    const handleWorkflowChange=(event: ChangeEvent<HTMLSelectElement>)=>{
+        setFormValues({
+            ...formValues,
+            workflowId: event.target.value
         });
-        // console.log('object', data);
+    }
 
+    const handleSubmit=async(e: FormEvent)=>{
+        e.preventDefault();
+        if(validateFields()){
+           const res = await workflowAPI.execution(formValues);
+           if(res.status === 200){
+            toast.success('Workflow run successfully');
+           }
+        }
+        else {
+           toast.error("Upload CSV file and then select the workflow")
+        }        
     };
+
+    const csvToRowsAndCols = (csvText: string) => {
+        const columns = csvText.slice(0, csvText.indexOf("\r\n")).split(",");
+        const rows = csvText.slice(csvText.indexOf("\r\n") + 2).split("\r\n");
+        return { columns, rows }
+      };
+
+    useEffect(()=>{
+        if(validateFields()){
+            setDisabled(!disabled);
+        }
+        return ()=> setDisabled(true);
+    }, [formValues]);
 
   return (
    <Layout>
@@ -60,11 +101,12 @@ const WorkflowUploadPage = () => {
             <div className=''>
                 <h4 className='text-center p-2 text-xl'>Upload data and run workflow</h4>
             <form className="" onSubmit={handleSubmit}>
-               <div className='flex flex-col justify-center items-center border-4 border-dashed border-gray-400 rounded-xl bg-gray-100 min-h-[400px] w-full md:w-1/2 mx-auto mb-8'>
-                    <button className='cursor-pointer' title='upload' onClick={handleFileInput}>
+               <div className='flex flex-col justify-center items-center border-4 border-dashed border-gray-400 rounded-xl bg-gray-100 min-h-[400px] w-full md:w-1/2 lg:1/3 mx-auto mb-8'>
+                    <div className='cursor-pointer' onClick={handleFileInput}>
                         <IoCloudUploadSharp className='w-20 h-20 text-gray-500'/>
-                    </button>
-                    <p>Upload .csv files</p>
+                    </div>
+                    <div className='text-lg text-gray-500 font-semibold'>{fileName}</div>
+                    <p className='mt-8 text-gray-500'>Upload .csv files</p>
                         <input type='file' ref={fileInputRef} accept='.csv' onChange={handleChange} title='upload workflow' className='hidden'/>
                 </div>
 
@@ -110,14 +152,20 @@ const WorkflowUploadPage = () => {
                         </ul>
                         </div>
                         <label htmlFor="states" className="sr-only">Choose a workflow</label>
-                        <select id="states" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg border-s-gray-100 border-s-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 ">
-                            <option selected>Choose a workflow</option>
-                            {workflowList.map((wf:WorkflowType)=><option key={wf._id} value={wf.title.toLowerCase()}>{wf.title}</option>)}
-                    
+                        <select 
+                            title="workflow list"
+                            value={formValues.workflowId}
+                            onChange={handleWorkflowChange}
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-e-lg border-s-gray-100 border-s-2 focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5 ">
+                                <option selected>Choose a workflow</option>
+                                {workflowList.map((wf:WorkflowType)=><option key={wf._id} value={wf._id}>{wf.title}</option>)}
                         </select>
                     </div>
 
-                    <button className='flex items-center justify-center mx-auto w-1/2 px-6 py-2 my-2 text-center rounded bg-teal-700 text-white'>
+                    <button 
+                        disabled={disabled} 
+                        className={`flex items-center justify-center mx-auto w-1/2 px-6 py-2 my-2 text-center rounded bg-teal-700 ${ disabled ? `opacity-40`:`opacity-1`} text-white`}
+                    >
                         Run workflow 
                     </button>
                 </div>
