@@ -2,6 +2,29 @@
 # Workflow App in MERN with Tailwind, Reactflow, Zustand and Tanstack Query
 
 
+
+**How it works**
+
+- Allows users to create workflows for basic data manipulation tasks. Users will visually construct workflows using pre-defined nodes available via a drag-and-drop interface.
+- Then in another page they can upload data & select the workflow to trigger the execution
+
+**Here, we have 4 predefined nodes that tend to execute the workflow based on the data from the uploaded `.csv` file**
+
+- Filter Data: 
+    This node converts all data within a specified column to lowercase.
+- Wait: 
+    This node introduces a 60-second delay in the workflow execution.
+- Convert Format: 
+    This node transforms data from CSV format to JSON.
+- Send POST Request: 
+    This node transmits a POST request containing a JSON payload to the URL (https://requestcatcher.com).
+
+
+**Features**
+
+- Workflow including (nodes, edges)
+- User Authtentication & Authorization 
+
 *To start application: You have to install first NodeJS from here [NodeJS download](https://nodejs.org/en/download/prebuilt-installer) in your system and after installation follow these steps as below*
 
 1. Clone this repo by the command 
