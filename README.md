@@ -28,6 +28,7 @@
 - Copy and Delete Nodes, 
 - Save and Loaded workflow
 - Execute the workflow after uploading `.csv` file data
+- Showing server processing (with progress bar) on each step while workflow execution
 
 *To start application: You have to install first NodeJS from here [NodeJS download](https://nodejs.org/en/download/prebuilt-installer) in your system and after installation follow these steps as below*
 
@@ -81,7 +82,7 @@ npm start
 
  **Screenshot**
 
- [screen recording](https://www.loom.com/share/62f1a3ee581c4c96b15fc8221c0c21ba?sid=6c07f7b0-c4c7-46a6-acac-64e3ec3b7227) 
+ [screen recording](https://www.loom.com/share/ea566a2db2e64da08b4eb547e07a5109?sid=7529779a-8506-4883-bcfa-dbc9e7a62b69) 
 
  ![Workflow home page](workflow-homepage.png)
 

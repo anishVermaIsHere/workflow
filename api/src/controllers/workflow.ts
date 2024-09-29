@@ -1,4 +1,5 @@
 "use strict";
+import io from "../index.js";
 import { Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
 import WorkFlowModel from "../models/workflow.js";
@@ -96,32 +97,48 @@ const workflowController = {
     try {
       const { workflowId, rows, columns } = req.body;
       const workflow = await WorkFlowModel.findById({ _id: workflowId });
-      if (!workflow) {
-        return res
-          .status(RESOURCE_NOT_FOUND)
-          .json({ message: "Workflow not found" });
-      }
-
-      if (workflow) {
-        let finalData!: any;
-        workflow.nodes.map((node: any) => {
-          switch (node.data.label) {
-            case "Filter Data":
-               finalData = formatDataIntoRowsAndCols(rows, columns);
-               break;
-            case "Wait":
-                //...
-                break;
-            case "Convert Format":
-                finalData = JSON.stringify({data: finalData});
-                break;
-            case "Send POST Request":
-                requestToCatcher(`${appConfig.reqUri}/test`, finalData)
-                break;
+          
+          if (!workflow) {
+            return res
+              .status(RESOURCE_NOT_FOUND)
+              .json({ message: "Workflow not found" });
           }
-        });
-        return res.status(SUCCESS).json({ message: "Workflow execution successful", data:finalData});
-      }
+    
+          if (workflow) {
+            let finalData!: any;
+            let status!:{
+              step: number,
+              progress: number,
+              total: number
+            };
+
+              for (const node of workflow.nodes) {
+              switch ((node as any).data.label) {
+                case "Filter Data":
+                    status={ step: 1, progress: 25, total: 4 };
+                    await emitProgressWithDelay(status);
+                    finalData = formatDataIntoRowsAndCols(rows, columns);        
+                    break;
+                case "Wait":
+                    status={ ...status, step: 2, progress: 50 };
+                    await emitProgressWithDelay(status, 4000);
+                    break;
+                case "Convert Format":
+                    status={ ...status, step: 3, progress: 75 };
+                    await emitProgressWithDelay(status);
+                    finalData = convertingDataIntoJSON(finalData);
+                    break;
+                case "Send POST Request":
+                    status={ ...status, step: 4, progress: 100 };
+                    await emitProgressWithDelay(status);
+                    requestToCatcher(`${appConfig.reqUri}/test`, finalData);
+                    break;
+              }              
+            };
+
+            return res.status(SUCCESS).json({ message: "Workflow execution successful", data: finalData });
+          }
+
 
     } catch (error: any) {
       console.log("API error while executing workflow", error);
@@ -131,12 +148,25 @@ const workflowController = {
 };
 
 
-
+async function emitProgressWithDelay(
+  status: { step: number, progress: number, total: number }, 
+  delay?: number
+): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, delay)); 
+  io.emit('progressUpdate', status); 
+}
 
 async function requestToCatcher (url: string, data?: any){
    return await axios.post(url, data);
+};
+
+function wait(time: number) {
+  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+function convertingDataIntoJSON(data:any){ 
+  return JSON.stringify({ data }) ;
+};
 
 function formatDataIntoRowsAndCols(rows: string[], columns: string[]) {
   return rows
@@ -161,12 +191,9 @@ function formatDataIntoRowsAndCols(rows: string[], columns: string[]) {
       );
     })
     .filter(Boolean);
-}
+};
 
 export default workflowController;
-
-
-
 
 
 

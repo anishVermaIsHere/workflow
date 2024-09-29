@@ -78,6 +78,7 @@ const workflowCSVData = object({
         columns: string({ required_error: "Columns is required" }),
         rows: string({ required_error: "Rows is required" }),
         workfowId: string({ required_error: "Workflow ID is required" }),
+        socketId:  string({ required_error: "Socket ID is required" }).optional(),
     })
 });
 

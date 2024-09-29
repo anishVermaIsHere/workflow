@@ -5,9 +5,11 @@ import useWorkFlowStore from '../store/workflow.store'
 import { WorkflowType } from '../shared/types'
 import { workflowAPI } from '../shared/services/api/workflow'
 import toast from 'react-hot-toast'
+import Progress from '../components/Progress'
+import io from 'socket.io-client';
+import { toastPromise } from '../utils'
 
-
-
+const socket =  io(import.meta.env.VITE_BASE_URL);
 
 const WorkflowUploadPage = () => {
 
@@ -16,15 +18,21 @@ const WorkflowUploadPage = () => {
     const [formValues, setFormValues]= useState<{
         columns: string[],
         rows: string[],
-        workflowId: string
+        workflowId: string,
+        socketId?: string
     }>({
         columns: [],
         rows: [],
-        workflowId: ''
+        workflowId: '',
     });
 
     const [fileName, setFileName] = useState('');
     const [disabled, setDisabled] = useState(true);
+    const [ progress, setProgress ] = useState({
+        total: 4,
+        step: 0,
+        value: 0
+    });
 
     const validateFields=()=>{
         if(formValues.columns && formValues.rows && formValues.workflowId){
@@ -52,7 +60,7 @@ const WorkflowUploadPage = () => {
                     setFormValues({
                         ...formValues,
                         columns,
-                        rows
+                        rows,
                     });
                 }
             }
@@ -65,20 +73,22 @@ const WorkflowUploadPage = () => {
     const handleWorkflowChange=(event: ChangeEvent<HTMLSelectElement>)=>{
         setFormValues({
             ...formValues,
-            workflowId: event.target.value
+            workflowId: event.target.value,
         });
     }
 
     const handleSubmit=async(e: FormEvent)=>{
         e.preventDefault();
         if(validateFields()){
-           const res = await workflowAPI.execution(formValues);
-           if(res.status === 200){
-            toast.success('Workflow run successfully');
-           }
+           const handler = workflowAPI.execution(formValues);
+            toastPromise(handler, {
+                loading: 'Processing',
+                success: 'Workflow execution completed',
+                error: 'Error while processing workflow',
+            });
         }
         else {
-           toast.error("Upload CSV file and then select the workflow")
+           toast.error("Upload CSV file and then select the workflow");
         }        
     };
 
@@ -86,14 +96,38 @@ const WorkflowUploadPage = () => {
         const columns = csvText.slice(0, csvText.indexOf("\r\n")).split(",");
         const rows = csvText.slice(csvText.indexOf("\r\n") + 2).split("\r\n");
         return { columns, rows }
-      };
+    };
 
-    useEffect(()=>{
-        if(validateFields()){
-            setDisabled(!disabled);
-        }
-        return ()=> setDisabled(true);
+    useEffect(() => {
+        const handleConnect = () => {
+            setFormValues(prev => ({
+                ...prev,
+                socketId: socket.id, 
+            }));
+        };
+
+        socket.on('connect', handleConnect);
+
+        return () => {
+            socket.off('connect', handleConnect);
+        };
+    }, [handleChange]);
+    
+
+    useEffect(() => {
+        setDisabled(!validateFields());
     }, [formValues]);
+
+    useEffect(() => {
+        socket.on('progressUpdate', (status) => {
+          setProgress({ total: status.total, step: status.step, value: status.progress });
+        });
+    
+        return () => {
+          socket.off('progressUpdate');
+        };
+      }, [socket]);
+
 
   return (
    <Layout>
@@ -101,13 +135,22 @@ const WorkflowUploadPage = () => {
             <div className=''>
                 <h4 className='text-center p-2 text-xl'>Upload data and run workflow</h4>
             <form className="" onSubmit={handleSubmit}>
-               <div className='flex flex-col justify-center items-center border-4 border-dashed border-gray-400 rounded-xl bg-gray-100 min-h-[400px] w-full md:w-1/2 lg:1/3 mx-auto mb-8'>
-                    <div className='cursor-pointer' onClick={handleFileInput}>
-                        <IoCloudUploadSharp className='w-20 h-20 text-gray-500'/>
-                    </div>
-                    <div className='text-lg text-gray-500 font-semibold'>{fileName}</div>
-                    <p className='mt-8 text-gray-500'>Upload .csv files</p>
-                        <input type='file' ref={fileInputRef} accept='.csv' onChange={handleChange} title='upload workflow' className='hidden'/>
+               <div onClick={handleFileInput} className='flex flex-col justify-center items-center border-4 border-dashed border-gray-400 rounded-xl bg-gray-100 min-h-[400px] w-full md:w-1/2 lg:1/3 mx-auto mb-8 cursor-pointer'>                    
+                    {progress.step ? 
+                    <Progress 
+                    progressValue={progress.value} 
+                    steps={`${progress.step}/${progress.total}`}
+                    />
+                    :
+                    <>
+                        <div className='flex flex-col items-center justify-center cursor-pointer' >
+                            <IoCloudUploadSharp className='w-20 h-20 text-gray-500'/>
+                            <div className='text-lg text-gray-500 font-semibold'>{fileName}</div>
+                            <p className='mt-8 text-gray-500'>Upload .csv files</p>
+                            <input type='file' ref={fileInputRef} accept='.csv' onChange={handleChange} title='upload workflow' className='hidden'/> 
+                        </div>
+                    </>}
+                   
                 </div>
 
                 <div className='max-w-sm mx-auto'>

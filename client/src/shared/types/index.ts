@@ -17,6 +17,7 @@ interface WorkflowUploadDataType {
     rows: string[];
     columns: string[];
     workflowId: string;
+    socketId?: string;
 }
 
 

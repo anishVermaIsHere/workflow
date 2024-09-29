@@ -7,8 +7,7 @@ import { AddressInfo } from "net";
 import { dbConnection } from "./config/connect.js";
 import { userRouter } from "./routes/user.js";
 import { workflowRouter } from "./routes/workflow.js";
-import UserModel from "./models/user.js";
-import encrypt from "./config/encrypt.js";
+import { Server } from "socket.io";
 
 
 
@@ -39,8 +38,21 @@ app.use("/api/v1/workflow", workflowRouter);
 
 
 
+
 const server = app.listen(appConfig.port || 5000, () => {
     const { port } = server.address() as AddressInfo;
     console.log(`***** Workflow server started at port ${port} *****`);
     dbConnection();
 });
+
+const io = new Server(server, { cors : { origin: appConfig.corsOrigin }});
+
+io.on('connection', (socket) => {
+  console.log('User connected');
+
+  socket.on('disconnect', () => {
+      console.log('User disconnected');
+  });
+});
+
+export default io;
